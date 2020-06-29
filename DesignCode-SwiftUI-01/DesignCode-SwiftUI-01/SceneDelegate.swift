@@ -8,16 +8,6 @@
 import SwiftUI
 import UIKit
 
-class CustomHostingController<Content>: UIHostingController<Content> where Content: View {
-	override var prefersStatusBarHidden: Bool {
-		return false
-	}
-
-	override var preferredStatusBarStyle: UIStatusBarStyle {
-		return .default
-	}
-}
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
 
@@ -27,13 +17,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
 		// Create the SwiftUI view that provides the window contents.
-		let contentView = Home()
+		let contentView = TabBar()
 
 		// Use a UIHostingController as window root view controller.
 		if let windowScene = scene as? UIWindowScene {
 			let window = UIWindow(windowScene: windowScene)
-			let vc = CustomHostingController(rootView: contentView)
-			vc.overrideUserInterfaceStyle = .light
+			let vc = UIHostingController(rootView: contentView)
 			window.rootViewController = vc
 			self.window = window
 			window.makeKeyAndVisible()

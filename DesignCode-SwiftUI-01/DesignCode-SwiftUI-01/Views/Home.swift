@@ -10,16 +10,17 @@ import SwiftUI
 struct Home: View {
 	@State var showProfile = false
 	@State var viewState = CGSize.zero
+	@State var showUpdate = false
 
 	var body: some View {
 		ZStack {
 			Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
 				.edgesIgnoringSafeArea(.all)
 
-			HomeView(showProfile: $showProfile)
+			HomeView(showProfile: $showProfile, showUpdate: $showUpdate)
 				.padding(.top, 44)
 				.background(Color.white)
-				.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+				.clipShape(RoundedRectangle(cornerRadius: showUpdate ? 0 : 30, style: .continuous))
 				.shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 20)
 				.offset(y: showProfile ? -450 : 0)
 				.rotation3DEffect(
@@ -42,8 +43,8 @@ struct Home: View {
 					DragGesture()
 						.onChanged {
 							var viewState = $0.translation
-							if viewState.height < -150 {
-								viewState.height = -150
+							if viewState.height < -100 {
+								viewState.height = -100
 							}
 							self.viewState = viewState
 						}

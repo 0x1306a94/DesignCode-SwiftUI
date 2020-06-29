@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
 	@Binding var showProfile: Bool
-	@State var showUpdate = false
+	@Binding var showUpdate: Bool
 
 	var body: some View {
 		VStack {
@@ -66,7 +66,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
 	static var previews: some View {
-		HomeView(showProfile: .constant(false))
+		HomeView(showProfile: .constant(false), showUpdate: .constant(false))
 	}
 }
 
