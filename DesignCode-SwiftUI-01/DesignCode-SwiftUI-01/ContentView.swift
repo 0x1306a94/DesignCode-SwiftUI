@@ -5,62 +5,87 @@
 //  Created by king on 2020/6/28.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
+
+extension UIScreen {
+	static var width: CGFloat {
+		return UIScreen.main.bounds.width
+	}
+
+	static var height: CGFloat {
+		return UIScreen.main.bounds.height
+	}
+}
 
 struct ContentView: View {
 	@State var show = false
 	@State var viewState = CGSize.zero
+	@State var showCard = false
+	@State var bottomState = CGSize.zero
+	@State var showFull = false
 
 	var body: some View {
 		ZStack {
 			TitleView()
 				.background(Color.white)
 				.blur(radius: show ? 20 : 0)
-				.animation(.default)
+				.opacity(showCard ? 0.4 : 1.0)
+				.offset(y: showCard ? -200 : 0)
+				.animation(
+					Animation
+						.default
+						.delay(0.1)
+				)
 
 			BackgroundCardView()
-				.frame(width: 320, height: 220)
+				.frame(width: UIScreen.width - (showCard ? 100 : 80), height: 220)
 				.background(show ? Color("card3") : Color("card4"))
 				.cornerRadius(20)
 				.shadow(radius: 20)
 				.offset(x: 0, y: show ? -400 : -40)
 				.offset(x: viewState.width, y: viewState.height)
-				.scaleEffect(0.9)
+				.offset(y: showCard ? -180 : 0)
+				.scaleEffect(showCard ? 1.0 : 0.9)
 				.rotationEffect(.degrees(show ? 0 : 10))
+				.rotationEffect(.degrees(showCard ? -10 : 0))
 				.rotation3DEffect(
-					.degrees(10),
+					.degrees(showCard ? 0 : 10),
 					axis: (x: 10.0, y: 0.0, z: 0.0)
 				)
 				.blendMode(.hardLight)
 				.animation(.easeInOut(duration: 0.5))
 
 			BackgroundCardView()
-				.frame(width: 320, height: 220)
+				.frame(width: UIScreen.width - (showCard ? 40 : 80), height: 220)
 				.background(show ? Color("card4") : Color("card3"))
 				.cornerRadius(20)
 				.shadow(radius: 20)
 				.offset(x: 0, y: show ? -200 : -20)
 				.offset(x: viewState.width, y: viewState.height)
+				.offset(y: showCard ? -140 : 0)
 				.scaleEffect(0.95)
 				.rotationEffect(.degrees(show ? 0 : 5))
+				.rotationEffect(.degrees(showCard ? -5 : 0))
 				.rotation3DEffect(
-					.degrees(5),
+					.degrees(showCard ? 0 : 5),
 					axis: (x: 10.0, y: 0.0, z: 0.0)
 				)
 				.blendMode(.hardLight)
 				.animation(.easeInOut(duration: 0.3))
 
 			CardView()
-				.frame(width: 340, height: 220)
+				.frame(width: UIScreen.width - (showCard ? 0 : 80), height: 220)
 				.background(Color.black)
-				.cornerRadius(20)
+//				.cornerRadius(20)
+				.clipShape(RoundedRectangle(cornerRadius: showCard ? 30 : 20, style: .continuous))
 				.shadow(radius: 20)
 				.offset(x: viewState.width, y: viewState.height)
+				.offset(y: showCard ? -100 : 0)
 				.blendMode(.hardLight)
 				.animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0))
 				.onTapGesture {
-					self.show.toggle()
+					self.showCard.toggle()
 				}
 				.gesture(
 					DragGesture()
@@ -75,10 +100,39 @@ struct ContentView: View {
 				)
 
 			ButtomCardView()
-				.offset(x: 0, y: UIScreen.main.bounds.height * 0.7)
+				.offset(x: 0, y: showCard ? UIScreen.height * 0.45 : UIScreen.height + 50)
+				.offset(y: bottomState.height)
 				.blur(radius: show ? 20 : 0)
-				.animation(.default)
+				.animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.8))
+				.gesture(
+					DragGesture()
+						.onChanged {
+							let boundaries = UIScreen.height * 0.5 - 88
+							var bottomState = $0.translation
+							if self.showFull {
+								bottomState.height += -boundaries
+							}
 
+							if bottomState.height < -boundaries {
+								// 不允许继续往上滑动
+								bottomState.height = -boundaries
+							}
+							self.bottomState = bottomState
+						}
+						.onEnded { _ in
+							let boundaries = UIScreen.height * 0.5 - 88
+							if self.bottomState.height > 50 {
+								self.showCard = false
+							}
+							if (self.bottomState.height < -100 && !self.showFull) || (self.bottomState.height < -(boundaries - 50) && self.showFull) {
+								self.bottomState.height = -boundaries
+								self.showFull = true
+							} else {
+								self.bottomState = .zero
+								self.showFull = false
+							}
+						}
+				)
 		}
 	}
 }
