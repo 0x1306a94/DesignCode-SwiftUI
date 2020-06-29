@@ -13,7 +13,7 @@ struct Home: View {
 
 	var body: some View {
 		ZStack {
-			Color(#colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 1))
+			Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
 				.edgesIgnoringSafeArea(.all)
 
 			HomeView(showProfile: $showProfile)
