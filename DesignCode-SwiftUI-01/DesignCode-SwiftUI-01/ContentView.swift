@@ -92,10 +92,16 @@ struct ContentView: View {
 						.onChanged {
 							self.viewState = $0.translation
 							self.show = true
+							self.showFull = false
+							self.showCard = false
+							self.bottomState = .zero
 						}
 						.onEnded { _ in
 							self.viewState = CGSize.zero
 							self.show = false
+							self.showFull = false
+							self.showCard = false
+							self.bottomState = .zero
 						}
 				)
 
