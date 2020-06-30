@@ -20,7 +20,7 @@ struct Home: View {
 			HomeView(showProfile: $showProfile, showUpdate: $showUpdate)
 				.padding(.top, 44)
 				.background(Color.white)
-				.clipShape(RoundedRectangle(cornerRadius: showUpdate ? 0 : 30, style: .continuous))
+				.clipShape(RoundedRectangle(cornerRadius: (!showProfile || showUpdate) ? 0 : 30, style: .continuous))
 				.shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 20)
 				.offset(y: showProfile ? -450 : 0)
 				.rotation3DEffect(
